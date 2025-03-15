@@ -1,1 +1,41 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+mean = 5
+std_dev = 2
+
+x = np.linspace(mean - 4*std_dev, mean + 4*std_dev, 1000)
+y = (1 / (std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mean) / std_dev) ** 2)
+
+prob_less_than_3 = np.trapz(y[x < 3], x[x < 3])
+
+prob_between_4_and_7 = np.trapz(y[(x >= 4) & (x <= 7)], x[(x >= 4) & (x <= 7)])
+
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+sns.lineplot(x=x, y=y, label='Distribusi Normal', color='blue')
+plt.fill_between(x, y, where=(x < 3), color='lightblue', alpha=0.5, label='P(X < 3)')
+plt.title('Distribusi Waktu Pengiriman Paket')
+plt.xlabel('Waktu Pengiriman (hari)')
+plt.ylabel('Probabilitas')
+plt.legend()
+
+plt.subplot(1, 2, 2)
+y_cdf = np.cumsum(y) * (x[1] - x[0])  
+sns.lineplot(x=x, y=y_cdf, label='Probabilitas Kumulatif', color='orange')
+plt.title('Probabilitas Kumulatif Waktu Pengiriman Paket')
+plt.xlabel('Waktu Pengiriman (hari)')
+plt.ylabel('Probabilitas Kumulatif')
+plt.axvline(x=3, color='red', linestyle='--', label='x = 3')
+plt.axvline(x=4, color='green', linestyle='--', label='x = 4')
+plt.axvline(x=7, color='purple', linestyle='--', label='x = 7')
+plt.legend()
+
+plt.tight_layout()
+plt.show()
+
+print(f"Probabilitas paket dikirim dalam waktu kurang dari 3 hari: {prob_less_than_3:.4f}")
+print(f"Probabilitas paket dikirim dalam waktu antara 4 dan 7 hari: {prob_between_4_and_7:.4f}")
