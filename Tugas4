@@ -1,0 +1,86 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+print("NAMA ANGGOTA Kelompok 2:")
+print("1. Raafi Muhammad Alim (V3924030)")
+print("2. Rohiyal Amiro (V3924025)")
+print("\n")
+
+
+#Tempat file sales.csv berada
+file_path = "D:\\Statiska dan Probabilitas\\Data Sales (1).csv"
+
+#jika encoding windows-1252 tidak bisa,
+df = pd.read_csv(file_path, encoding='windows-1252', delimiter = ';')
+
+print("5 Baris Pertama Data:")
+print(df.head())
+print("\n")
+
+# 1. Distribusi Frekuensi Kategori Produk pada Tahun 2014 dan Visualisasi
+df_2014 = df[df['Year'] == 2014]
+category_distribution = df_2014['Category'].value_counts()
+print("1. Distribusi Frekuensi Kategori Produk pada Tahun 2014")
+print(category_distribution.to_string())
+print("\n")
+
+print("VISUALISASI")
+plt.figure(figsize=(8, 6))  
+sns.barplot(x=category_distribution.index, y=category_distribution.values, hue=category_distribution.index, palette='viridis', legend=False)
+plt.title('Distribusi Frekuensi Kategori Produk pada Tahun 2014', fontsize=10)
+plt.xlabel('Kategori Produk', fontsize=6)
+plt.ylabel('Frekuensi', fontsize=6)
+plt.subplots_adjust(left=0.1, right=0.5, top=0.5, bottom=0.1)  
+plt.show()
+
+# 2. Distribusi Frekuensi Produk dengan Kategori Furniture
+df_furniture = df[df['Category'] == 'Furniture']
+product_distribution = df_furniture['Product Name'].value_counts()
+print("2. Distribusi Frekuensi Produk dengan Kategori Furniture")
+print(product_distribution.to_string())
+print("\n")
+
+plt.figure(figsize=(12, 80))  
+sns.barplot(x=product_distribution.values, y=product_distribution.index, hue=product_distribution.index, palette='magma', legend=False)  
+plt.title('VISUALISASI', fontsize=14)  
+plt.xlabel('Frekuensi', fontsize=12)  
+plt.ylabel('Nama Produk', fontsize=12)  
+plt.xticks(rotation=45) 
+plt.xticks(fontsize=12)  
+plt.yticks(fontsize=12)  
+plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)  
+plt.show()
+
+# 3. Produk dengan Penjualan Terbanyak pada Kategori Technology
+df_technology = df[df['Category'] == 'Technology']
+top_selling_product = df_technology['Product Name'].value_counts().idxmax()
+
+print("3. Produk dengan frekuensi terbanyak pada kategori Technology")
+print(top_selling_product)
+print("\n")
+
+# 4. Grafik Penjualan per Tahun di Kota DKI Jakarta (Tahun 2014 - 2017)
+df_jakarta = df[df['City'] == 'DKI Jakarta']
+transactions_per_year = df_jakarta.groupby('Year').size()
+print("4. Distribusi Frekuensi Transaksi per-Tahun di Kota DKI Jakarta (2014-2017) ")
+print(transactions_per_year.to_string())
+print("\n")
+
+plt.figure(figsize=(10, 6))  
+sns.lineplot(x=transactions_per_year.index, y=transactions_per_year.values, marker='o')
+plt.title('Grafik Frekuensi Transaksi per Tahun di DKI Jakarta (2014-2017)', fontsize=10)
+plt.xlabel('Tahun', fontsize=7)
+plt.ylabel('Frekuensi Transaksi', fontsize=7)
+plt.subplots_adjust(left=0.1, right=0.5, top=0.5, bottom=0.1) 
+plt.show()
+
+# 5. Peluang Pembeli Tipe Corporate Membeli Barang Kategori Office Supplies pada Tahun 2015
+df_2015_corporate = df[(df['Year'] == 2015) & (df['Segment'] == 'Corporate')]
+total_corporate_transactions = df_2015_corporate.shape[0]
+office_supplies_transactions = df_2015_corporate[df_2015_corporate['Category'] == 'Office Supplies'].shape[0]
+
+probability = office_supplies_transactions / total_corporate_transactions
+print("5. Peluang Pembeli Tipe Corporate Membeli Barang Kategori Office Supplies pada Tahun 2015")
+print(f"{probability:.2%}")
+print("\n")
